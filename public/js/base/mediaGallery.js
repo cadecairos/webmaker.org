@@ -4,8 +4,11 @@ define(['jquery', 'moment'],
 
   var countLarge = 2,
       countMedium = 8,
-      LIMIT_DESKTOP = 20,
-      LIMIT_MOBILE = 6,
+      STICKY_LIMIT = 6,
+      MOBILE_STICKY_LIMIT = 3,
+      LIMIT_DESKTOP = 20 - STICKY_LIMIT,
+      LIMIT_MOBILE = 6 - MOBILE_STICKY_LIMIT,
+      STICKY_REGEX = /^webmaker\:p([123456])$/,
       currentIter = 1,
       defaultAvatar = "http%3A%2F%2Fstuff.webmaker.org%2Favatars%2Fwebmaker-avatar-44x44.png";
 
@@ -53,71 +56,95 @@ define(['jquery', 'moment'],
     $el.append( $backTemplate );
   }
 
+  function extractStickyPriority( tags ) {
+    var res;
+    for ( var i = tags.length - 1; i >= 0; i-- ) {
+      res = STICKY_REGEX.exec( tags[ i ] );
+      if ( res ) {
+        return +res[1];
+      }
+    }
+    // no stick priority tag - lower priority
+    return STICKY_LIMIT + 1;
+  }
+
   function searchCallback( data, self ) {
-    var $makeContainer = $makeTemplate.clone( true ).addClass('rf'),
-        makeContainer = $makeContainer[0],
+    var $makeContainer,
+        makeContainer,
+        make,
         randSize = 'large';
 
-    // Make these easier to use
-    if ( data.tags.guide ) {
-      data.type = "guide";
-    } else {
-      data.type = data.contentType.replace( /application\/x\-/g, "" );
-    }
+    for ( var i = 0, len = data.length; i < len; i++ ) {
+      $makeContainer = $makeTemplate.clone( true ).addClass('rf');
+      makeContainer = $makeContainer[0];
+      make = data[i];
 
-    // the home page and the medium size for the teach page.
 
-    switch( $body[0].id ) {
-      case 'index':
-        if (countLarge > 0 && ( currentIter === 3 || currentIter === 4 ) ) {
-          randSize = 'large';
-          countLarge --;
-        } else {
+      // Make these easier to use
+      if ( make.taggedWithAny( "guide" ) ) {
+        make.type = "guide";
+      } else {
+        make.type = make.contentType.replace( /application\/x\-/g, "" );
+      }
+
+      // the home page and the medium size for the teach page.
+
+      switch( $body[0].id ) {
+        case 'index':
+          if (countLarge > 0 && ( currentIter === 3 || currentIter === 4 ) ) {
+            randSize = 'large';
+            countLarge --;
+          } else {
+            randSize = 'medium';
+            countMedium --;
+          }
+          ++currentIter;
+          break;
+
+        case 'teach':
           randSize = 'medium';
-          countMedium --;
-        }
-        ++currentIter;
-        break;
+          break;
+      }
 
-      case 'teach':
-        randSize = 'medium';
-        break;
+      // create front Element & populate
+      var $frontEl = $('<div class="front make-thumbnail">' + '<div class="front-title">' + make.title + '</div></div></div>');
+
+      // if there's a thumbnail, set the right css
+      if ( make.thumbnail ) {
+        $frontEl.addClass( "thumbnail" ).css( "background-image", "url(" + make.thumbnail + ")" );
+      }
+
+      // create back element & populate
+      var $backEl = $('<div class="back"></div>');
+      var tags = make.tags;
+
+       if ( make.taggedWithAny( "template" ) ) {
+        $makeContainer.addClass( 'make-template' );
+      }
+      $makeContainer.addClass( 'make-type-' + make.type );
+      $makeContainer.addClass(randSize);
+
+      $makeContainer.addClass( 'make-type-' + make.type );
+      $makeContainer.addClass(randSize);
+
+      createMakeBack( make, $backEl );
+
+      // add front & back elements to flip container
+      var $flip = $('<a href="'+ make.url +'" class="flipContainer"></a>');
+
+      // add flip container & link to make container
+      $makeContainer.append( $flip );
+
+      // add to gallery & packery
+      $mainGallery.append( $makeContainer );
+      self.packery.appended( makeContainer );
     }
-
-    // create front Element & populate
-    var $frontEl = $('<div class="front make-thumbnail">' + '<div class="front-title">' + data.title + '</div></div></div>');
-
-    // if there's a thumbnail, set the right css
-    if ( data.thumbnail ) {
-      $frontEl.addClass( "thumbnail" ).css( "background-image", "url(" + data.thumbnail + ")" );
-    }
-
-    // create back element & populate
-    var $backEl = $('<div class="back"></div>');
-    var tags = data.tags;
-
-    $makeContainer.addClass( 'make-type-' + data.type );
-    $makeContainer.addClass(randSize);
-
-    createMakeBack( data, $backEl );
-
-    // add front & back elements to flip container
-    var $flip = $('<a href="'+ data.url +'" class="flipContainer"></a>');
-
-    $flip.append($frontEl).append( $backEl );
-
-    // add flip container & link to make container
-    //var $a = $('<a href="' + data.url + '"></a>');
-    $makeContainer.append( $flip );
-
-    // add to gallery & packery
-    $mainGallery.append( $makeContainer );
-    self.packery.appended( makeContainer );
   }
 
   var MediaGallery = function(webmaker) {
 
     this.limit = LIMIT_DESKTOP;
+    this.stickyLimit = STICKY_LIMIT;
     this.wm = webmaker;
     this.packery = new Packery(mainGallery, {
       itemSelector: 'div.make',
@@ -139,6 +166,7 @@ define(['jquery', 'moment'],
     // Detect whether we are in mobile dimensions or not.
     if (isMobile) {
       this.limit = LIMIT_MOBILE;
+      this.stickyLimit = MOBILE_STICKY_LIMIT;
     }
   };
 
@@ -229,8 +257,22 @@ define(['jquery', 'moment'],
           }
         });
 
-        this.wm.doSearch( { tags: ['webmaker:recommended'] }, this.limit, function( data ) {
-          searchCallback( data, self );
+        self.wm.doSearch( { tags: ['webmaker:recommended'] }, self.limit, function(  err, data ) {
+          if ( err || !data ) {
+            return;
+          }
+          self.wm.doSearch( { tags: ['webmaker:sticky'] }, self.stickyLimit, function( err, stickyData ) {
+            if ( err || !stickyData ) {
+              return;
+            }
+            stickyData.sort(function( a, b ) {
+              var stickyA = extractStickyPriority( a.appTags ),
+                  stickyB = extractStickyPriority( b.appTags);
+
+              return stickyA - stickyB;
+            });
+            searchCallback( stickyData.concat( data ), self );
+          });
         });
         break;
 
@@ -247,7 +289,10 @@ define(['jquery', 'moment'],
 
         $makeTemplate.addClass( "make-teach" );
 
-        this.wm.doSearch( { tags: ['webmaker:recommended', 'guide'] }, this.limit, function( data ) {
+        this.wm.doSearch( { tags: ['webmaker:recommended', 'guide'] }, this.limit, function( err, data ) {
+          if ( err || !data ) {
+            return;
+          }
           searchCallback( data, self );
         });
         this.packery.stamp( $stickyBanner[0] );
@@ -259,7 +304,10 @@ define(['jquery', 'moment'],
   MediaGallery.prototype.loadMore = function () {
     var self = this;
     var pageNo = ++this.pageNo;
-    this.wm.doSearch( this.lastSearch, this.limit, function( data ) {
+    this.wm.doSearch( this.lastSearch, this.limit, function( err, data ) {
+      if ( err || !data ) {
+        return;
+      }
       searchCallback( data, self );
     }, pageNo );
   };
@@ -282,7 +330,10 @@ define(['jquery', 'moment'],
       $loading.hide();
     });
     this.limit = 16;
-    this.wm.doSearch( options, this.limit, function( data ) {
+    this.wm.doSearch( options, this.limit, function( err, data ) {
+      if ( err || !data ) {
+        return;
+      }
       searchCallback( data, self );
     });
     this.packery.layout();

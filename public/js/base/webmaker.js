@@ -49,7 +49,7 @@ define(['jquery', 'uri', 'base/ui'],
       make = new Make({ apiURL: makeURL });
       setup.page( page );
     },
-    doSearch: function( options, limit, each, pageNo ) {
+    doSearch: function( options, limit, callback, pageNo ) {
       var sortBy = 'createdAt',
           sortOrder = 'desc';
 
@@ -65,22 +65,7 @@ define(['jquery', 'uri', 'base/ui'],
       .limit( limit )
       .page ( pageNo || 1 )
       .sortByField( sortBy, sortOrder )
-      .then( function( error, results ) {
-        var result;
-
-        if ( error || !results ) {
-          return;
-        }
-
-        for ( var i = 0; i < results.length; i++ ) {
-          result = results[ i ];
-          result.tags = getTags( result.tags );
-          if ( each ) {
-            each( result );
-          }
-        }
-
-      });
+      .then( callback );
     }
   };
 
