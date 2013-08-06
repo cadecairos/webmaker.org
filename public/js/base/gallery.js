@@ -10,7 +10,6 @@ define(['jquery', 'nunjucks', 'base/ui', 'moment', 'makeapi'],
       options.hiddenClass = options.hiddenClass || 'packery-hide';
       options.makeView = options.makeView || 'make-teach.html';
       options.makeUrl = options.makeUrl || $('body').data('endpoint') || 'https://makeapi.webmaker.org';
-      options.defaultSearch = options.defaultSearch || 'webmaker:recommended';
       options.limit = options.limit || 12;
 
       var self = this;
@@ -30,6 +29,7 @@ define(['jquery', 'nunjucks', 'base/ui', 'moment', 'makeapi'],
         isLastPage = false,
         searchOptions = {
           limit: options.limit,
+          tags: [ "webmaker:recommended" ],
           sortByField: ['createdAt', 'desc'],
           page: 1
         };
@@ -83,7 +83,6 @@ define(['jquery', 'nunjucks', 'base/ui', 'moment', 'makeapi'],
 
         isLastPage = searchOptions.page >= Math.ceil(total / searchOptions.limit);
         if (isStickySearch) {
-          searchOptions.tags = options.defaultSearch;
           searchOptions.page = 0;
           isLastPage = false; //We always want to load more for stickies.
         }
