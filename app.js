@@ -222,6 +222,9 @@ app.get( "/search", routes.search );
 app.get( "/feedback", routes.page( "feedback" ) );
 app.get( "/style-guide", routes.page( "style-guide" ) );
 
+app.get( "/publish", routes.publish.form );
+app.post( "/publisher", routes.publish.publisher );
+
 app.get( "/details", routes.details );
 // Old
 app.get( "/details/:id", function(req,res) {

@@ -23,6 +23,7 @@ module.exports = {
   page: function( view ) {
     return require("./page")(view);
   },
+  publish: require("./publish" ),
   remove: require("./remove"),
   search: require("./search"),
   sitemap: require("./sitemap"),

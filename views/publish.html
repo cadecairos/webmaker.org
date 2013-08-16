@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="X-CSRF-Token" content="{{ csrf }}">
+    <meta name="login-url" content="{{ loginAPI }}">
+    <meta name="persona-email" content="{{ email }}">
+    <link rel="stylesheet" href="/bower/font-awesome/css/font-awesome.css">
+    <link href="//www.mozilla.org/tabzilla/media/css/tabzilla.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ loginAPI }}/css/nav.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/publish.css">
+  </head>
+  <body>
+  <header>
+    <div class="webmaker-outer-wrapper">
+      {% block header %}
+        <header id="webmaker-nav">
+          <nav class="webmaker-nav-container">
+            <div class="user-nav-container">
+              <a id="logo" href="/{{lang}}/"><img src="/img/logo.png" alt="{{ gettext("Mozilla Webmaker") }}"></a>
+              <ul class="webmaker-nav user-info">
+                <li class="user">
+                  {{ gettext("Hi") }} <span id="identity" class="user-name-container"></span>
+                </li>
+                <li>
+                  <iframe src="{{audience}}/sso/include.html" class="include-frame"></iframe>
+                </li>
+              </ul>
+            </div>
+            <a href="http://www.mozilla.org/" id="tabzilla">mozilla</a>
+          </nav>
+        </header>
+        {% endblock %}
+        <main id="content" class="content {% if page != 'events' %} clearfix {% endif %}">
+
+        </main>
+      </div>
+    </header>
+    <main>
+      {% if status == "success" %}
+        <h1>LIKE A BOWSE</h1>
+        <span>{{ url }}</span>
+      {% elif status == "failed" %}
+        <h1>CRASH 'N BURN</h1>
+      {% else %}
+        <form action="/publisher" method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrf }}">
+          <input type="hidden" name="contentType" value="{{ contentType }}">
+          <ol>
+            <li>
+              <label for="make-title">Title:</label>
+              <input id="make-title" name="title" type="text" value="{{ title }}">
+            </li>
+            <li>
+              <label for="make-description">Description:</label>
+              <input type="text" name="description" id="make-description" value="{{ description }}">
+            </li>
+            <li>
+              <input type="hidden" name="url" value="{{url}}">
+              <label for="make-url">URL:</label>
+              <input type="text" disabled=true value="{{url}}">
+            </li>
+            <li>
+              <button type="submit" id="send">Publish</button>
+            </li>
+          </ol>
+        </form>
+      {% endif %}
+    </main>
+    <script src="{{ personaSSO }}/sso/include.js"></script>
+    <script src="{{ loginAPI }}/js/sso-ux.js"></script>
+    {% if ga_account %}
+      <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '{{ ga_account }}']);
+        {% if ga_domain %}
+        _gaq.push(['_setDomainName', '{{ ga_domain }}']);
+        {% endif %}
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      </script>
+    {% endif %}
+  </body>
+</html>

@@ -52,7 +52,7 @@ module.exports = function( app ) {
       paths: [
         "/guides"
       ]
-    }    
+    }
   ];
 
   redirectMap.forEach(function( redirect ) {
