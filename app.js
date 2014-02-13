@@ -278,6 +278,7 @@ app.post('/verify', webmakerAuth.handlers.verify);
 app.post('/authenticate', webmakerAuth.handlers.authenticate);
 app.post('/create', webmakerAuth.handlers.create);
 app.post('/logout', webmakerAuth.handlers.logout);
+app.get('/check-username', webmakerAuth.handlers.exists);
 
 app.get("/healthcheck", routes.api.healthcheck);
 
