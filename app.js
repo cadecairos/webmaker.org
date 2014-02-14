@@ -183,6 +183,10 @@ app.use(i18n.middleware({
   translation_directory: path.resolve(__dirname, "locale")
 }));
 
+// Adding an external JSON file to our existing one for the specified locale
+var authLocaleJSON = require("./bower_components/webmaker-auth-client/locale/en_US.json");
+i18n.addLocaleObject({"en-US": authLocaleJSON}, function(result) {});
+
 app.use(express.json());
 app.use(express.urlencoded());
 
