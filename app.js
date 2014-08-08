@@ -325,14 +325,17 @@ app.use(function (err, req, res, next) {
 });
 
 var middleware = require("./lib/middleware");
-
+var CORS_DOMAINS = env.get('CORS_DOMAINS') ? env.get('CORS_DOMAINS').split(' ') : [];
 // ROUTES
 
-app.post('/verify', webmakerAuth.handlers.verify);
-app.post('/authenticate', webmakerAuth.handlers.authenticate);
-app.post('/create', webmakerAuth.handlers.create);
-app.post('/logout', webmakerAuth.handlers.logout);
-app.post('/check-username', webmakerAuth.handlers.exists);
+app.post('/verify', middleware.cors(CORS_DOMAINS), webmakerAuth.handlers.verify);
+app.post('/authenticate', middleware.cors(CORS_DOMAINS), webmakerAuth.handlers.authenticate);
+app.post('/create', middleware.cors(CORS_DOMAINS), webmakerAuth.handlers.create);
+app.post('/logout', middleware.cors(CORS_DOMAINS), webmakerAuth.handlers.logout);
+app.post('/check-username', middleware.cors(CORS_DOMAINS), webmakerAuth.handlers.exists);
+app.get('/csrfToken', middleware.cors(CORS_DOMAINS), function(req, res) {
+  res.send(req.csrfToken());
+});
 
 app.get("/healthcheck", routes.api.healthcheck);
 
