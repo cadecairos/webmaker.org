@@ -1,3 +1,8 @@
+{% if isAdmin %}
+  <div class="firehose-link text-center">
+    Add and remove featured makes using the <a href="{{firehoseUrl}}">Webmaker Firehose</a>
+  </div>
+{% endif %}
 <div class="main-gallery" data-total-hits="{{totalHits}}" data-limit="{{limit}}">
   <!-- Masonry helper stuff -->
   <div class="gutter-sizer"></div>

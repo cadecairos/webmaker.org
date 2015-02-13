@@ -43,7 +43,8 @@ module.exports = function (options) {
           page: page,
           layout: layout.name,
           template: layout.template,
-          isAdmin: req.session.user ? req.session.user.isAdmin : false
+          isAdmin: req.session.user ? req.session.user.isAdmin : false,
+          firehoseUrl: options.firehoseUrl
         });
       }, req.session.user ? req.session.user.id : '');
   };

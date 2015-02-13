@@ -367,7 +367,8 @@ app.get('/home-:variant', middleware.homePageRedirect, routes.angular);
 
 app.get('/explore', routes.gallery({
   layout: "index",
-  noPrefix: true
+  noPrefix: true,
+  firehoseUrl: env.get("FIREHOSE_URL")
 }));
 
 app.get("/gallery/list/:list", routes.gallery_old({
