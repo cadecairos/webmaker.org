@@ -449,6 +449,8 @@ app.get("/terms", routes.angular);
 app.get("/privacy", routes.angular);
 app.get("/languages", routes.page("languages"));
 
+app.get("/app", routes.app);
+
 // goggles onboard, with special image routing for lowest-threshold onboarding
 app.get("/goggles", routes.angular);
 app.get("/goggles/install", routes.angular);

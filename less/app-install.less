@@ -1,0 +1,77 @@
+@app-install-header-size: 24px;
+@app-install-text-size: 16px;
+@app-install-spacing: 32px;
+@btn-height: 49px;
+
+.install-webmaker-app {
+  .create-something,
+  .build-something,
+  .share-something,
+  .download-app {
+
+    padding-top: @app-install-spacing;
+    padding-bottom: @app-install-spacing;
+
+    .section-header,
+    .section-text {
+      color: @white;
+      line-height: 24px;
+    }
+
+    .section-header {
+      font-size: @app-install-header-size;
+      font-family: "Fira Sans";
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .section-text {
+      font-size: @app-install-text-size;
+      font-family: "Fira Sans";
+      font-weight: normal;
+      &.add-margin {
+        margin-bottom: @app-install-spacing;
+      }
+    }
+
+    .cellphone {
+      margin-top: @app-install-spacing;
+
+      img {
+        .center-block();
+      }
+    }
+  }
+
+  .app-download-button {
+    height: @btn-height;
+    >button {
+      height: 100%;
+      width: 100%;
+      background-color: #FACD34;
+      color: #4B5B62;
+      font-family: "Open Sans";
+      font-weight: bold;
+      font-size: 12px;
+    }
+  }
+
+  .create-something {
+    background-color: #64A8EE;
+  }
+
+  .build-something {
+    background-color: #EE8950;
+  }
+
+  .share-something {
+    background-color: #50E3C2;
+  }
+
+  .download-app {
+    background-color: #8796ED;
+  }
+
+  .install-footer {
+    margin-top: 0;
+  }
+}

@@ -4,6 +4,7 @@ module.exports = {
     submitResource: require("./api/submitResource")
   },
   angular: require("./angular"),
+  app: require("./app"),
   badges: require("./badges"),
   details: require("./details"),
   gallery: require("./gallery"),
