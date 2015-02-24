@@ -20,24 +20,24 @@
   .download-app {
 
 
-    @media (max-width: @screen-md-max) {
+    @media (max-width: @screen-sm-max) {
       padding-top: @app-install-spacing-mobile;
       padding-bottom: @app-install-spacing-mobile;
     }
 
-    @media (min-width: @screen-lg-min) {
+    @media (min-width: @screen-sm-min) {
       padding-top: @app-install-spacing-desktop;
       padding-bottom: @app-install-spacing-desktop;
     }
 
     .section-content {
-      @media (min-width: @screen-lg-min) {
+      @media (min-width: @screen-sm-min) {
         &.push-down {
           top: 100px;
         }
       }
       .desktop-install-app {
-        @media (max-width: @screen-md-max) {
+        @media (max-width: @screen-xs-max) {
           display: none;
         }
       }
@@ -46,9 +46,8 @@
     .section-header,
     .section-text {
       color: @white;
-      line-height: 24px;
       .text-center();
-      @media (min-width: @screen-lg-min) {
+      @media (min-width: @screen-sm-min) {
         .text-left();
       }
     }
@@ -56,22 +55,24 @@
     .section-header {
       font-size: @app-install-header-size-mobile;
       margin-bottom: 12px;
-      @media (min-width: @screen-lg-min) {
+      @media (min-width: @screen-sm-min) {
         font-size: @app-install-header-size-desktop;
-        margin-top: 140px;
         margin-bottom: @app-install-spacing-desktop;
+        margin-top: 140px;
+        // line-height: 50px;
       }
       font-family: "Fira Sans";
       font-weight: 500;
     }
     .section-text {
+      line-height: 24px;
       font-size: @app-install-text-size-mobile;
       text-align: justify;
 
       &.add-margin {
         margin-bottom: @app-install-spacing-mobile;
       }
-      @media (min-width: @screen-lg-min) {
+      @media (min-width: @screen-sm-min) {
         font-size: @app-install-text-size-desktop;
       }
       font-family: "Fira Sans";
@@ -79,12 +80,12 @@
     }
 
     .cellphone {
-      @media (max-width: @screen-md-max) {
+      @media (max-width: @screen-sm-max) {
         margin-top: @app-install-spacing-mobile;
       }
 
       img {
-        @media (min-width: @screen-lg-min) {
+        @media (min-width: @screen-sm-min) {
           height: 600px;
           width: auto;
         }
@@ -94,7 +95,8 @@
   }
 
   .app-download-button {
-    @media (min-width: @screen-lg-min) {
+
+    @media (min-width: @screen-sm-min) {
       display: none;
     }
   }
@@ -158,7 +160,7 @@
 
   .download-app {
     background-color: #8796ED;
-    @media (min-width: @screen-lg-min) {
+    @media (min-width: @screen-xs-min) {
       display: none;
     }
   }
