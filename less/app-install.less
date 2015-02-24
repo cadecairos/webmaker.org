@@ -55,11 +55,11 @@
     .section-header {
       font-size: @app-install-header-size-mobile;
       margin-bottom: 12px;
+      line-height: 50px;
       @media (min-width: @screen-sm-min) {
         font-size: @app-install-header-size-desktop;
         margin-bottom: @app-install-spacing-desktop;
-        margin-top: 140px;
-        // line-height: 50px;
+        margin-top: 100px;
       }
       font-family: "Fira Sans";
       font-weight: 500;
@@ -218,7 +218,11 @@
       height: @sms-height - 0.4rem;
       width: 100%;
     }
-
   }
-
+  .send-sms-btn-container {
+    @media ( max-width: @screen-md-max ) {
+      margin-left: 0;
+      padding-left: 0;
+    }
+  }
 }
