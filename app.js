@@ -439,7 +439,6 @@ app.get('/details/:id', middleware.removeXFrameOptions, function (req, res) {
   res.redirect('/details?id=' + req.params.id);
 });
 
-app.get('/me', routes.me);
 // Old
 app.get('/myprojects', routes.me);
 app.post('/remove', routes.remove);

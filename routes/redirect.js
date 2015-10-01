@@ -106,6 +106,11 @@ module.exports = function (app) {
 
       '/'
     ]
+  }, {
+    route: 'https://teach.mozilla.org/me',
+    paths: [
+      '/me'
+    ]
   }];
 
   redirectMap.forEach(function (redirect) {
