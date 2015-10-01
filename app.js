@@ -440,7 +440,6 @@ app.get('/details/:id', middleware.removeXFrameOptions, function (req, res) {
 });
 
 // Old
-app.get('/myprojects', routes.me);
 app.post('/remove', routes.remove);
 app.post('/like', routes.like.like);
 app.post('/unlike', routes.like.unlike);
